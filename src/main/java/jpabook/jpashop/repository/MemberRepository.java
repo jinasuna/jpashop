@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public class MemberRepository {
-    @PersistenceContext
+    @PersistenceContext // 엔티티 매니저를 주입해주는 어노테이션
     private EntityManager em;
 
     // 저장하는 코드

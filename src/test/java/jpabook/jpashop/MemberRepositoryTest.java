@@ -1,5 +1,6 @@
 package jpabook.jpashop;
 
+import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class MemberRepositoryTest {
     @Transactional
     @Rollback(false)
     public void testMember() throws Exception{
-        /* 타 강의 내용
+        /*  실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발 강의
         // given
         Member member = new Member();
         member.setUsername("memberA");
@@ -33,10 +34,11 @@ public class MemberRepositoryTest {
         Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
         Assertions.assertThat(findMember.getUsername()).isEqualTo(member.getUsername());
         Assertions.assertThat(findMember).isEqualTo(member); // pass
-        */
-        // 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발 강의
+*/
+
+
+        }
 
     }
 
 
-}
