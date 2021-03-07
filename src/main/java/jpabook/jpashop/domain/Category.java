@@ -33,11 +33,17 @@ public class Category {
     private List<Item> items = new ArrayList<>();
 
     // '나' 타입의 내 부모(...?)
-    @ManyToOne // '내' 부모니까 -> 부모가 one 자식이 many인 입장
+    @ManyToOne(fetch = FetchType.LAZY) // '내' 부모니까 -> 부모가 one 자식이 many인 입장
     @JoinColumn(name = "parent_id") // join으로 해결해줌
     private Category parent;
 
     // 부모가 자식(카테고리)을 여러개 가질 수 있다
     @OneToMany(mappedBy = "parent") // 바로 위의 객체를 mappedBy함
     private List<Category> child = new ArrayList<>();
+
+    // 연관관계 편이 메소드
+    public void addChildCategory(Category child){
+        this.child.add(child);
+        child.setParent(this);
+    }
 }
