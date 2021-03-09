@@ -1,6 +1,7 @@
 package jpabook.jpashop.domain.item;
 
 import jpabook.jpashop.domain.Category;
+import jpabook.jpashop.exception.NotEnoughStockException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // 싱글 테이블 전략을 사용함을 나타냄
 @DiscriminatorColumn(name = "dtype")
-@Getter @Setter
+@Getter @Setter // 편의상 setter를 넣어 놓았지만 stockQuantity의 내용을 변경시킬 일이 있으면 setter를 사용하는 것이 아니라 핵심 비즈니스 메소드를 가지고 변경하는 것이 바람직하다.(객체지향적)
 public abstract class Item {
     @Id
     @GeneratedValue
@@ -26,4 +27,26 @@ public abstract class Item {
 
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
+
+    // ==비즈니스 로직 추가== //
+    // 재고를 늘리고 줄이도록 할 것이다.
+    // 도메인 주도 설계를 할 때 엔티티 자체에서 해결할 수 있는 내용들은 엔티티 안에 비즈니스 로직으로 넣는 것이 좋다 -> 객체 지향적
+
+    /**
+     * stock 증가시키는 메소드
+     */
+    public void addStock(int quantity){
+        this.stockQuantity += quantity;
+    }
+    /**
+     * stock 감소시키는 메소드
+     */
+    public void removeStock(int quantity){
+        int restStock = this.stockQuantity - quantity;
+        if(restStock < 0){
+            throw new NotEnoughStockException("need more stock");
+        }
+        this.stockQuantity = restStock;
+    }
+
 }
