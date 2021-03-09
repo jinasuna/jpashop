@@ -43,8 +43,8 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status; // 주문상태 [ORDER, CANCEL]
 
-    // 연관관계 편의 메소드
-    // : 멤버를 세팅할 때 두개를 원자적으로 묶는 메소드를 만들기(실수를 방지하기 위해)
+    //==연관관계 편의 메서드==//
+    // : 멤버를 세팅할 때 두개를 원자적으로 묶는 메서드를 만들기(실수를 방지하기 위해)
     // : 위치 - 컨트롤 하는 쪽에 두는게 좋다.
     public void setMember(Member member){
       this.member = member;
@@ -57,5 +57,55 @@ public class Order {
     public void setDelivery(Delivery delivery){
         this.delivery = delivery;
         delivery.setOrder(this);
+    }
+
+    //==생성 메서드==//
+    // 주문 생성에 대한 복잡한 비즈니스 로직을 완결시켜 버린다.                      // ... 쩜쩜쩜 문법?? 여러개를 넘길 수 있다.
+    // createOrder하기 전에 이미 oOrderItem에서 재고를 까고 넘어온다.
+    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems){
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
+        for (OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        order.setStatus(OrderStatus.ORDER);
+        order.setOrderDate(LocalDateTime.now());
+        return order;
+    }
+
+    //==비지니스 로직==//
+    /**
+     * 주문 취소
+     */
+    public void cancel(){           // 배송완료
+        if(delivery.getStatus() == DeliveryStatus.COMP){
+            throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
+        }
+        // validation을 통과하면 order의 상태를 cancel로 바꿔주겠다.
+        this.setStatus(OrderStatus.CANCEL);
+
+        // roof를 돌리며 재고를 원상복구 시키기
+        for(OrderItem orderItem : orderItems){ // this 생략가능
+            orderItem.cancel();
+        }
+    }
+
+    //==조회 로직==//
+    /**
+     * 전체 주문 가격 조회
+     */
+    public int getTotalPrice(){ // 현재 나한테는 정보가 없고, orderItem들을 전부 더하면 된다.
+        int totalPrice = 0;
+        for(OrderItem orderItem: orderItems){
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
+        // java8 문법에 의하면 이렇게도 가능
+        /*
+            return orderItems.stream()
+               .mapToInt(OrderItem::getTotalPrice)
+               .sum();
+        */
     }
 }
