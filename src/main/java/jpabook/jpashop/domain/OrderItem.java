@@ -1,7 +1,9 @@
 package jpabook.jpashop.domain;
 
 import jpabook.jpashop.domain.item.Item;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem {
     @Id
     @GeneratedValue
@@ -26,6 +29,11 @@ public class OrderItem {
 
     private int orderPrice; // 주문 가격 (주문 당시의 가격)
     private int count;      // 주문 수량
+
+    // jpa는 protected까지 constructor를 만들도록 허락해 준다. -> lombok으로 줄일 수 있다.
+    // 비즈니스 로직에서 new로 막 만들어서 set하지 않도록 막아줘야 한다.
+    // jpa 쓰면서 protected 설정 ! 쓰지 말라는 것
+    // protected OrderItem(){}
 
     //==생성 메서드==//
     public static OrderItem createOrderItem(Item item, int orderPrice, int count){
@@ -45,7 +53,6 @@ public class OrderItem {
     }
 
     //==조회 로직==//
-
     /**
      * 주문상품 전체 가격 조회
      */

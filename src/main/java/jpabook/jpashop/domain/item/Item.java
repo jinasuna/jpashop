@@ -40,6 +40,7 @@ public abstract class Item {
     }
     /**
      * stock 감소시키는 메소드
+     * 상품주문_재고수량초과() 테스트를 제대로 하려면 removeStock()에 대한 단위 테스트가 필요하다.
      */
     public void removeStock(int quantity){
         int restStock = this.stockQuantity - quantity;
