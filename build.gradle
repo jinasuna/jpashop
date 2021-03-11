@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.3.6.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'jpabook'
@@ -19,10 +20,14 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6")
+	implementation 'com.querydsl:querydsl-jpa'
+	implementation 'com.querydsl:querydsl-apt'
 	compileOnly 'org.projectlombok:lombok:1.18.16'
 	runtimeOnly 'com.h2database:h2'
 	developmentOnly ('org.springframework.boot:spring-boot-devtools')
@@ -34,4 +39,23 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+def querydslSrcDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslSrcDir
+}
+
+sourceSets{
+	main.java.srcDirs querydslSrcDir
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl{
+	options.annotationProcessorPath = configurations.querydsl
 }

@@ -7,11 +7,19 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create    # 항상 조심!!
+    generate-ddl: false
+    open-in-view: false
+    show-sql: true
     properties:
       hibernate:
-#       show_sql: true
+        show_sql: true
         format_sql: true
+        use_sql_comments: true
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
 
 logging:
   level:
