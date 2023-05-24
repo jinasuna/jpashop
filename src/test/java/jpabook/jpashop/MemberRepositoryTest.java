@@ -1,7 +1,11 @@
 package jpabook.jpashop;
 
+<<<<<<< HEAD
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.repository.MemberRepository;
+=======
+
+>>>>>>> eb07265 (2023-0525ver commit)
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
